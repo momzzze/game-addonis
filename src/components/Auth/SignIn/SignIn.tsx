@@ -1,34 +1,70 @@
 import { Button } from "@/components/ui/button";
-import {Link} from "react-router-dom";
-import { ZodType ,z} from "zod";
-import {useForm} from "react-hook-form";
+import { Link, useNavigate } from "react-router-dom";
+import { ZodType, z } from "zod";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { login } from "@/services/auth.service";
+import { Context } from "@/context/AuthContext";
+import { useContext } from "react";
+import { useToast } from "@/components/ui/use-toast";
 
-type FormData={
-    email: string;
-    password: string;
-}
+type FormData = {
+  email: string;
+  password: string;
+};
 
 function SignIn() {
-    const schema: ZodType<FormData> = z.object({
-        email: z.string().email(),
-        password: z.string().min(6,'Password should be with at least with 6 symbols.').max(100),
-    })
-    const { register, handleSubmit, formState: { errors } } = useForm<FormData>({ resolver: zodResolver(schema)});
-
-    const submitData=(data:FormData)=>{
-        console.log(data);        
-    }
+  const authContext = useContext(Context);
+  const {toast}=useToast();
+  const navigate = useNavigate();
+  const schema: ZodType<FormData> = z.object({
+    email: z.string().email(),
+    password: z
+      .string()
+      .min(6, "Password should be with at least with 6 symbols.")
+      .max(100),
+  });
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormData>({ resolver: zodResolver(schema) });
+  if (!authContext) {
+    return;
+  }
+  const { setUser } = authContext;
+  const submitData = async (data: FormData) => {
+    await login(data.email, data.password)
+      .then((credential) => {
+        setUser(credential.user);
+      })
+      .then(() => {
+        toast({
+            title: "Signed in successfully",
+            description: "We've signed you in.",
+            duration: 5000,
+            variant: "default",
+        })
+        reset();
+        navigate("/");
+      }).catch((error)=>{
+        toast({
+            title: "Something went wrong",
+            description: error.message,
+            duration: 5000,
+            variant: "destructive",
+        })
+      });
+  };
   return (
     <>
       <section className="bg-gray-50 dark:bg-gray-900">
         <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-          <div
-            className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
-          >
+          <div className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
             <img
               className="w-50 h-20 mr-2 dark:invert"
-              src={'/public/GALogo.svg'}
+              src={"/public/GALogo.svg"}
               alt="logo"
             />
           </div>
@@ -37,7 +73,10 @@ function SignIn() {
               <h1 className="text-xl text-center font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                 Sign in to your account
               </h1>
-              <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit(submitData)}>
+              <form
+                className="space-y-4 md:space-y-6"
+                onSubmit={handleSubmit(submitData)}
+              >
                 <div>
                   <label
                     htmlFor="email"
@@ -52,7 +91,9 @@ function SignIn() {
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="name@company.com"
                   />
-                  {errors.email && <span className="text-red-500">{errors.email.message}</span>}
+                  {errors.email && (
+                    <span className="text-red-500">{errors.email.message}</span>
+                  )}
                 </div>
                 <div>
                   <label
@@ -68,13 +109,16 @@ function SignIn() {
                     placeholder="••••••••"
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   />
-                  {errors.password && <span className="text-red-500">{errors.password.message}</span>}
+                  {errors.password && (
+                    <span className="text-red-500">
+                      {errors.password.message}
+                    </span>
+                  )}
                 </div>
                 <div className="flex items-center justify-between">
-                  <div className="flex items-start">
-                  </div>
+                  <div className="flex items-start"></div>
                   <Link
-                    to={'/forgot-password'}
+                    to={"/forgot-password"}
                     className="text-sm font-medium text-primary-600 hover:underline dark:text-white dark:hover:text-primary"
                   >
                     Forgot password?
@@ -89,7 +133,7 @@ function SignIn() {
                 <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                   Don&apos;t have an account yet?{" "}
                   <Link
-                    to={'/register'}
+                    to={"/register"}
                     className="font-medium text-primary-600 hover:underline dark:text-primary-500"
                   >
                     Sign up

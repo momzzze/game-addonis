@@ -5,6 +5,7 @@ import {useForm} from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { registerUser } from "@/services/auth.service";
 import { createUser } from "@/services/user.service";
+import { useToast } from "@/components/ui/use-toast";
 
 
 type FormData={
@@ -13,9 +14,20 @@ type FormData={
     confirmPassword: string;
 }
 
+export type UserData={
+    email: string|null;
+    uid: string;
+    role: string;
+    createdAt: string;
+    updatedAt: string;
+    name: string;
+    phone: string;    
+}
+
 
 function SignUp() {
     const navigate = useNavigate();
+    const {toast}=useToast();
     const schema: ZodType<FormData> = z.object({
         email: z.string().email(),
         password: z.string().min(6,'Password should be with at least with 6 symbols.').max(100),
@@ -26,20 +38,38 @@ function SignUp() {
     });
     const { register, handleSubmit, formState: { errors } } = useForm<FormData>({ resolver: zodResolver(schema)});
 
-    const submitData=async(data:FormData)=>{
-      const credentials=await registerUser(data.email,data.password);
-      const userData={
-        email:credentials.user.email,
-        uid:credentials.user.uid,
-        role:'user',
-        createdAt:new Date().toISOString(),
-        updatedAt:new Date().toISOString(),
-        name:'',
-        phone:'',
-      }  
-      createUser(userData)
-      navigate('/')
-    }
+    const submitData = async (data: FormData) => {
+        try {
+          const credentials = await registerUser(data.email, data.password);
+      
+          const userData: UserData = {
+            email: credentials.user.email,
+            uid: credentials.user.uid,
+            role: 'user',
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            name: '',
+            phone: '',
+          };
+      
+          await createUser(userData);
+          toast({
+            title: 'Signed up successfully',
+            description: 'We have created your account.',
+            duration: 5000,
+            variant: 'default',
+          });
+          navigate('/');
+        } catch (error) {
+          toast({
+            title: 'Something went wrong',
+            description: 'Email already exists or something',
+            duration: 5000,
+            variant: 'destructive',
+          });
+        }
+      };
+
   return (
     <>
     <section className="bg-gray-50 dark:bg-gray-900">

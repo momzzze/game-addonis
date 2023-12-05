@@ -11,7 +11,7 @@ interface ContextProps {
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
 }
 
-export const Context = createContext<ContextProps | undefined>(undefined);
+export const Context = createContext<ContextProps | undefined | null>(undefined);
 
 export function AuthContext({ children }: AuthContextProps) {
   const auth = getAuth();

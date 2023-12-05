@@ -31,7 +31,7 @@ function Navbar() {
       </div>
       <div className="flex gap-4 font-bold text-2xl px-3">
         <ModeToggle />
-        {!user ? (<Link to={"/login"}>Login</Link>):(<Button className="text-2xl" onClick={logoutHandler}>Logout</Button>)}
+        {!user ? (<Link to={"/login"}>Login</Link>):(<Button className="text-2xl text-black dark:text-white" onClick={logoutHandler}>Logout</Button>)}
       </div>
     </div>
   );

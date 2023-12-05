@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { passwordReset } from "@/services/auth.service";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import {Link} from "react-router-dom";
@@ -16,8 +17,8 @@ function ForgotPassword() {
     })
     const { register, handleSubmit, formState: { errors } } = useForm<FormData>({ resolver: zodResolver(schema)});
 
-    const submitData=(data:FormData)=>{
-        console.log(data);        
+    const submitData=async(data:FormData)=>{
+        await passwordReset(data.email)
     }
 
 
