@@ -1,12 +1,29 @@
 import { Button } from "@/components/ui/button";
 import {Link} from "react-router-dom";
+import { ZodType ,z} from "zod";
+import {useForm} from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+type FormData={
+    email: string;
+    password: string;
+}
+
 function SignIn() {
+    const schema: ZodType<FormData> = z.object({
+        email: z.string().email(),
+        password: z.string().min(6,'Password should be with at least with 6 symbols.').max(100),
+    })
+    const { register, handleSubmit, formState: { errors } } = useForm<FormData>({ resolver: zodResolver(schema)});
+
+    const submitData=(data:FormData)=>{
+        console.log(data);        
+    }
   return (
     <>
       <section className="bg-gray-50 dark:bg-gray-900">
         <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-          <a
-            href="#"
+          <div
             className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
           >
             <img
@@ -14,13 +31,13 @@ function SignIn() {
               src={'/public/GALogo.svg'}
               alt="logo"
             />
-          </a>
+          </div>
           <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
             <div className="p-6 space-y-4 md:space-y-6 sm:p-8 ">
               <h1 className="text-xl text-center font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                 Sign in to your account
               </h1>
-              <form className="space-y-4 md:space-y-6" action="#">
+              <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit(submitData)}>
                 <div>
                   <label
                     htmlFor="email"
@@ -30,11 +47,12 @@ function SignIn() {
                   </label>
                   <input
                     type="email"
-                    name="email"
+                    {...register("email")}
                     id="email"
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="name@company.com"
                   />
+                  {errors.email && <span className="text-red-500">{errors.email.message}</span>}
                 </div>
                 <div>
                   <label
@@ -45,11 +63,12 @@ function SignIn() {
                   </label>
                   <input
                     type="password"
-                    name="password"
+                    {...register("password")}
                     id="password"
                     placeholder="••••••••"
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   />
+                  {errors.password && <span className="text-red-500">{errors.password.message}</span>}
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-start">
