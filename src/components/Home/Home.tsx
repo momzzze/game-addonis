@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState,useContext } from "react";
 import { getAuth, User } from "firebase/auth";
+import { Context } from "@/context/AuthContext";
 
 function Home() {
   const auth = getAuth();
   const [currentUser, setCurrentUser] = useState<User | null>(auth.currentUser);
   const [user, setUser] = useState<User | null>(null);
-
+  const {currentUserInfo,isAdmin}=useContext(Context)||{};
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((userAuth) => {
       if (userAuth) {
@@ -21,7 +22,13 @@ function Home() {
       unsubscribe();
     };
   }, [auth]);
-
+  useEffect(() => {
+    if (currentUserInfo && !isAdmin) {
+      // Do something with currentUserInfo and isAdmin
+      console.log(currentUserInfo);
+      console.log(isAdmin);
+    }
+  }, [currentUserInfo, isAdmin]);
   return (
     <div>
       <h1 className="text-bold text-3xl">Home</h1>
