@@ -7,11 +7,11 @@ import { Button } from "../ui/button";
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { user, setUser } = useContext(Context);
+  const { user, setUser,isAdmin } = useContext(Context)||{};
   const navigate = useNavigate();
   const logoutHandler = async () => {
-    const logoutUser = await logout().then(() => {
-      setUser(null);
+    await logout().then(() => {
+      if (setUser) setUser(null);
       navigate("/");
     });
   };
@@ -33,6 +33,7 @@ function Navbar() {
             />
           </Link>
           <Link className="invisible sm:visible" to={"/about"}>About</Link>
+          {isAdmin&&(<Link className="invisible sm:visible" to={"/admin"}>Admin</Link>)}
         </div>       
         <div className="flex items-center">
         <div className="flex invisible sm:visible">
@@ -70,6 +71,7 @@ function Navbar() {
           <div className="px-2 pb-3 pt-3">
           <Link className="rounded-md py-1 px-2 block font-semibold text-2xl hover:bg-orange-400" to={'/'}>Home</Link>
           <Link className="rounded-md py-1 px-2 block font-semibold text-2xl hover:bg-orange-400" to={'/about'}>About</Link>  
+          {isAdmin&&(<Link className="rounded-md py-1 px-2 block font-semibold text-2xl hover:bg-orange-400" to={'/admin'}>Admin</Link>)} 
           <div className="px-5">
               <ModeToggle />   
           </div> 
@@ -84,22 +86,7 @@ function Navbar() {
             </Button>
           )}
           </div>  
-        )}
-       
-       {/* <div className="flex py-3 items-center justify-between border-b bg-primary dark:bg-primary">
-        <div className="flex gap-2 font-bold text-2xl px-3">
-          <Link to={"/"}>
-            <img
-              className="w-50 h-10 mr-2 dark:invert"
-              src={"/public/GALogo.svg"}
-              alt="logo"
-            />
-          </Link>
-          <Link to={"/about"}>About</Link>
-        </div>
-        
-      </div> */}
-      
+        )}  
       </header>
       
     </>
