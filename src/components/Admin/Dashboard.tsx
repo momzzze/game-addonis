@@ -1,26 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import CreateGameForm from './CreateGameForm';
 
 const Dashboard: React.FC = () => {
   return (
-    <div className="flex flex-wrap">
+    <div className="grid lg:grid-cols-2 grid-cols-1 gap-4">
       {/* Section 1: Create Game */}
-      <div className="w-full md:w-1/2 px-4 py-4">
-        <div className="bg-white shadow-md rounded p-4">
-          <h2 className="text-lg font-semibold mb-2">Create Game</h2>
-          {/* Your create game form or component */}
-          {/* Example Link to a create game page */}
-          <Link
-            to="/create-game"
-            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
-          >
-            Create New Game
-          </Link>
-        </div>
+      <div className="w-full px-4 py-4">
+        <CreateGameForm/>
       </div>
 
       {/* Section 2: View All Games */}
-      <div className="w-full md:w-1/2 px-4 py-4">
+      <div className="w-full  px-4 py-4">
         <div className="bg-white shadow-md rounded p-4">
           <h2 className="text-lg font-semibold mb-2">View All Games</h2>
           {/* Your view all games component */}

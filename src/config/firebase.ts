@@ -2,10 +2,9 @@
 import { getApp, getApps, initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getStorage } from "firebase/storage";
 
-// Your web app's Firebase configuration
+
 const firebaseConfig = {
   apiKey: "AIzaSyCU3eFnnBtpx154IpJjL_s8HhvcvzyKuPI",
   authDomain: "game-adonis.firebaseapp.com",
@@ -19,4 +18,6 @@ const firebaseConfig = {
 const app =getApps()?.length ? getApp() : initializeApp(firebaseConfig);
 const auth= getAuth(app);
 const db= getFirestore(app);
-export {app, auth, db}
+const storage= getStorage(app);
+
+export {app, auth, db, storage}

@@ -1,7 +1,7 @@
 import { UserData } from '@/components/Auth/SignUp/SignUp';
 import { db } from '@/config/firebase';
 import { getAuth } from 'firebase/auth';
-import { addDoc, collection, doc, setDoc, getDoc } from 'firebase/firestore';
+import {  doc, setDoc, getDoc } from 'firebase/firestore';
 
 
 export const createUser = async (userData: UserData) => {
