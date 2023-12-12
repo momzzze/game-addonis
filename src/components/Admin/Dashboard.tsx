@@ -1,19 +1,39 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import CreateGameForm from './CreateGameForm';
-import DisplayAllGames from './DisplayAllGames';
+import DisplayAllGames, { Game } from './DisplayAllGames';
+import { getGames } from '@/services/game.service';
+
+export type Game = {
+  id: string;
+  title: string;
+  description: string;
+  imageURLS: string[];
+  tags: string[];
+  addonCategories: string[];
+};
 
 const Dashboard: React.FC = () => {
+  const [games, setGames] = useState<Game[]>([]);
+
+  const refreshGames = async () => {
+    const fetchedGames = await getGames();
+    setGames(fetchedGames);
+  };
+  useEffect(() => {
+    refreshGames();
+  }, [games]);
+
   return (
     <div className="grid lg:grid-cols-2 grid-cols-1 gap-4">
       {/* Section 1: Create Game */}
       <div className="w-full px-4 py-4">
-        <CreateGameForm/>
+        <CreateGameForm onGameCreated={refreshGames}/>
       </div>
 
       {/* Section 2: View All Games */}
       <div className="w-full  px-4 py-4">
-        <DisplayAllGames/>
+        <DisplayAllGames games={games}/>
       </div>
 
       {/* Section 3: View All Users */}

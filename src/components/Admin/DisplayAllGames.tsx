@@ -2,45 +2,32 @@ import { getGames } from "@/services/game.service";
 import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Pencil, Trash } from "lucide-react";
+import { Game } from "./Dashboard";
 
-type Game = {
-  id: string;
-  title: string;
-  description: string;
-  imageURLS: string[];
-  tags: string[];
-  addonCategories: string[];
-};
+interface DisplayAllGamesProps {
+    games: Game[];
+  }
 
-const DisplayAllGames = () => {
-  const [games, setGames] = useState<Game[]>([]);
 
-  const gamesList = async () => {
-    const games = await getGames();
-    setGames(games);
-  };
-
-  useEffect(() => {
-    gamesList();
-  }, []);
+const DisplayAllGames:React.FC<DisplayAllGamesProps> = ({games}) => {  
+    
+  
 
   return (
     <div className="">
       <h1>All Games</h1>
-      <div className="flex flex-row">
+      <div className="">
         {games.length !== 0 &&
           games.map((game) => (
             <div key={game.id} className="rounded-lg text-white m-1 p-1 w-full">
               <div className="">
                 <div className="border border-gray-300 p-2 rounded-lg flex md:flex-row justify-evenly items-center ">
                   <div className="flex-1">
-                    <div className="flex flex-row">
-                      
+                    <div className="flex flex-row items-center">                      
                       <img
-                        src={game.imageURLS[1]}
+                        src={game.imageURLS[0]}
                         alt={`${game.title} image`}
-                        width={120}
-                        height={120}
+                        className="w-40 h-40 object-cover"
                       />
                       <span className="text-black dark:text-gray-300 p-4 pl-10">
                         {game.title}

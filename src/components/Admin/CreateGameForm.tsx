@@ -9,6 +9,9 @@ import { createGame } from "@/services/game.service";
 import TagsInput from "./TagsInput";
 import AddonCategory from "./AddonCategory";
 
+interface CreateGameFormProps {
+  onGameCreated: () => void;
+}
 interface FormData {
   name: string;
   description: string;
@@ -27,7 +30,7 @@ const schema: ZodType<FormData> = z.object({
   //   categories: z.array(z.string()),
 });
 
-const CreateGameForm: React.FC = () => {
+const CreateGameForm: React.FC<CreateGameFormProps> = ({onGameCreated}) => {
   const {
     register,
     handleSubmit,
@@ -61,6 +64,7 @@ const CreateGameForm: React.FC = () => {
       tags: allTags,
       addonCategories: allCategories,
     });
+    onGameCreated();
   };
 
   return (
