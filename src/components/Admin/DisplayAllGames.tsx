@@ -33,15 +33,28 @@ const DisplayAllGames = () => {
             <div key={game.id} className="rounded-lg text-white m-1 p-1 w-full">
               <div className="">
                 <div className="border border-gray-300 p-2 rounded-lg flex md:flex-row justify-evenly items-center ">
-                  <span className="text-black dark:text-gray-300 p-4 flex-1 pl-10">
-                    {game.title}
-                  </span>
-                  <Button variant={"ghost"}>
-                    <Pencil className="w-4 h-4 text-gray-700 dark:text-gray-300" />
-                  </Button>
-                  <Button variant={"ghost"}>
-                    <Trash className="w-4 h-4 text-gray-700 dark:text-gray-300" />
-                  </Button>
+                  <div className="flex-1">
+                    <div className="flex flex-row">
+                      
+                      <img
+                        src={game.imageURLS[1]}
+                        alt={`${game.title} image`}
+                        width={120}
+                        height={120}
+                      />
+                      <span className="text-black dark:text-gray-300 p-4 pl-10">
+                        {game.title}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex">
+                    <Button variant={"ghost"}>
+                      <Pencil className="w-4 h-4 text-gray-700 dark:text-gray-300" />
+                    </Button>
+                    <Button variant={"ghost"}>
+                      <Trash className="w-4 h-4 text-gray-700 dark:text-gray-300" />
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>
