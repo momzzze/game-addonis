@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import CreateGameForm from './CreateGameForm';
+import DisplayAllGames from './DisplayAllGames';
 
 const Dashboard: React.FC = () => {
   return (
@@ -12,17 +13,7 @@ const Dashboard: React.FC = () => {
 
       {/* Section 2: View All Games */}
       <div className="w-full  px-4 py-4">
-        <div className="bg-white shadow-md rounded p-4">
-          <h2 className="text-lg font-semibold mb-2">View All Games</h2>
-          {/* Your view all games component */}
-          {/* Example Link to view all games page */}
-          <Link
-            to="/view-all-games"
-            className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded"
-          >
-            View All Games
-          </Link>
-        </div>
+        <DisplayAllGames/>
       </div>
 
       {/* Section 3: View All Users */}
