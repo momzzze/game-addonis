@@ -12,7 +12,6 @@ import TagsInput from "../Admin/TagsInput";
 import { getGameImageURLs, uploadGameImages } from "@/services/storage.service";
 
 const schema: ZodType<FormData> = z.object({
-  name: z.string().min(3).max(50),
   description: z.string().min(10),
 });
 
@@ -61,12 +60,13 @@ const EditGame: React.FC = () => {
     setAllCategories(data?.game?.addonCategories || []);
   }, [data?.game?.addonCategories]);
 
-  const onSubmit = async (game: FormData) => {  
-    await uploadImage(game.name)    
+  const onSubmit = async (game: FormData) => { 
+    
+    await uploadImage(data?.game?.title)    
     if(allTags.length!==0 && allCategories.length!==0){        
-    const imageURLS: string[] = await getGameImageURLs(game.name);  
+    const imageURLS: string[] = await getGameImageURLs(data.game.title);  
         let editedGame={
-            title: game.name,
+            title: data.game.title,
             description: game.description,
             imageURLS: imageURLS,
             tags: allTags,
@@ -96,6 +96,7 @@ const EditGame: React.FC = () => {
             {...register("name")}
             className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-300 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Game Name"
+            disabled
           />
           {errors.name && <p className="text-red-500">{errors.name.message}</p>}
         </div>
