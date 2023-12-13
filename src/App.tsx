@@ -7,6 +7,7 @@ import SignIn from "./components/Auth/SignIn/SignIn";
 import SignUp from "./components/Auth/SignUp/SignUp";
 import ForgotPassword from "./components/Auth/Forgot-password/ForgotPassword";
 import Dashboard from "./components/Admin/Dashboard";
+import EditGame from "./components/Games/EditGame";
 
 function App() {
   return (
@@ -19,7 +20,8 @@ function App() {
         <Route path="/login" element={<SignIn />} />
         <Route path="/register" element={<SignUp />} />        
         <Route path="/forgot-password" element={<ForgotPassword />} />        
-        <Route path="/admin" element={<Dashboard />} />
+        <Route path="/admin" element={<Dashboard />} />                
+        <Route path="/edit-game/:id" element={<EditGame />} />
       </Routes>
     </>
   );

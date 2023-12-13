@@ -20,6 +20,7 @@ export const createGame = async (gameData: GameData) => {
     try {
         const gameRef = doc(db, 'games', gameName);
         await setDoc(gameRef, gameData);
+
     } catch (error) {
         console.error('Error adding game to Firestore: ', error);
     }

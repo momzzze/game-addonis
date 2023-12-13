@@ -5,70 +5,70 @@ import "react-markdown-editor-lite/lib/index.css";
 import { z, ZodType } from "zod";
 import { Button } from "../ui/button";
 import { getGameImageURLs, uploadGameImages } from "@/services/storage.service";
-import { createGame } from "@/services/game.service";
-import TagsInput from "./TagsInput";
+import TagsInput from "../Admin/TagsInput";
 import AddonCategory from "./AddonCategory";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addGameToFirestore } from "@/Store/GamesSlice";
 
-interface CreateGameFormProps {
-  onGameCreated: () => void;
-}
-interface FormData {
+
+export interface FormData {
   name: string;
   description: string;
-  tags: string[];
-  //   pictures: FileList;
-  //   addons: string[];
-  //   categories: string[];
+  tags: string[]; 
 }
 
 const schema: ZodType<FormData> = z.object({
   name: z.string().min(3).max(50),
   description: z.string().min(10),
-  // tags: z.array(z.string()),
-  //   pictures: z.array(z.instanceof(File)),
-  //   addons: z.array(z.string()),
-  //   categories: z.array(z.string()),
+ 
 });
 
-const CreateGameForm: React.FC<CreateGameFormProps> = ({onGameCreated}) => {
+const CreateGameForm: React.FC = () => {
   const {
     register,
     handleSubmit,
-    setValue,
     formState: { errors },
   } = useForm<FormData>({ resolver: zodResolver(schema) });
+  const dispatch=useDispatch();
+
   const [imageUpload, setImageUpload] = useState<FileList | null>(null);
   const [allTags, setAllTags] = useState<string[]>([]);
   const [allCategories, setAllCategories] = useState<string[]>([]);
+  const navigate=useNavigate();
 
-  const handleAddTags = (tags) => {
+
+  const handleAddTags = (tags:string[]) => {
     setAllTags(tags);
   };
 
-  const handleAddCategories = (categories) => {
+  const handleAddCategories = (categories:string[]) => {
     setAllCategories(categories);
   };
 
-  const uploadImage = async (gameName) => {
+  const uploadImage = async (gameName:string) => {
     if (imageUpload === null) return;
     await uploadGameImages(imageUpload, gameName);
   };
 
   const onSubmit = async (data: FormData) => {
     await uploadImage(data.name);
-    const imageURLS: string[] = await getGameImageURLs(data.name);
-    await createGame({
-      title: data.name,
-      description: data.description,
-      imageURLS: imageURLS,
-      tags: allTags,
-      addonCategories: allCategories,
-    });
-    onGameCreated();
+    
+    const imageURLS: string[] = await getGameImageURLs(data.name);   
+    const game= {
+          title: data.name,
+          description: data.description,
+          imageURLS: imageURLS,
+          tags: allTags,
+          addonCategories: allCategories,
+    }
+    dispatch(addGameToFirestore(game));
+    navigate('/');
   };
 
   return (
     <>
+    <h1 className="py-5 text-3xl">Create game</h1>
       <form onSubmit={handleSubmit(onSubmit)} className="mt-2">
         <div className="mt-2">
           <label

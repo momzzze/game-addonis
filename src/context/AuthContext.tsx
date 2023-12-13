@@ -9,7 +9,7 @@ interface AuthContextProps {
 }
 
 interface ContextProps {
-  user: User | null;
+  user: User | null | undefined;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
   isAuth: boolean;
   currentUserInfo:UserData|null;  
@@ -27,12 +27,19 @@ export function AuthContext({ children }: AuthContextProps) {
   const [isAdmin, setIsAdmin] = useState(false);
 
   const getCurrentUserInfo=async(id:string)=>{    
-    getUserById(id).then((data)=>{
-      if(data?.role==='admin'){
-        setIsAdmin(true);
-      }
+   try {
+    const data=await getUserById(id);
+   if(data){
       setCurrentUserInfo(data);
-    })
+      if(data?.role==='admin'){
+        setIsAdmin(true);      
+      }else{
+        setIsAdmin(false);
+      }
+   } 
+   } catch (error) {
+      console.log(`Error getting user info: ${error}`);      
+   }
   }
 
 
@@ -46,6 +53,7 @@ export function AuthContext({ children }: AuthContextProps) {
       else {
         setUser(null);
         setCurrentUserInfo(null);
+        setIsAdmin(false);
       }
     });
 
